@@ -103,15 +103,22 @@ if(system.args.length===1){
 			resData.dataList=[];
 			page.includeJs("http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js", function() {
 				var data = page.evaluate(function() {
-					items=$('.result h3 a');
+					items=$('.result');
 					var _items=[]
-					for(var i=0;i<items.length;i++){
-						_items.push(items[i].innerText); 
-					} 
+					$result.each(function() {
+	                    var imgs = $(this).find('.c-img')
+	                    data.push({
+	                        title: $(this).children('h3').text(),
+	                        info: $(this).find('.c-abstract').text(),
+	                        link: $(this).find('h3 a')[0].href,
+	                        pic: imgs.length > 0 ? imgs[0].src : ''
+	                    })
+	                })
 			    	return _items;
 				});
 				resData.dataList=data;
 			});
+			phantom.outputEncoding = 'gb2312';
 			console.log(JSON.stringify(resData));
 		}
 		phantom.exit();
